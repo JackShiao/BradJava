@@ -29,6 +29,30 @@ public class TWId {
     	}
     }
     
+    private TWId(String id) {
+    	this.id = id;
+    }
+    
+    public static TWId createTWId(String id) {
+    	if (isRight(id)) {
+    		return new TWId(id);
+    	}else {
+    		return null;
+    	}
+    }
+    
+    public boolean isMale() {
+    	if(id.charAt(1) == '1') {
+            return true;
+    	}else {
+    		return false;
+    	}
+    }
+    
+    public String getArea() {
+    	return "台南市";
+    }
+    
     @Override
     public String toString() {
     	return id;
@@ -46,9 +70,9 @@ public class TWId {
 //    	    if (letters.indexOf(c1) != -1) {
 //    	    	char c2 = id.charAt(1);
 //    	    	if (c2 == '1' || c2 == '2') {
-//    	    		for (int i = 2; i < 10; i++) {
+//    	    		for (int i = 2; i <= 9; i++) {
 //    	    			char x = id.charAt(i);
-//    	    			System.out.println(x);
+////    	    			System.out.println(x);
 //    	    			if (x == '0' || x == '1' || x == '2'|| x == '3'|| x == '4' || x == '5'
 //    	    					|| x == '6' || x == '7' || x == '8' || x == '9') {
 //    	    				isRight = true;
