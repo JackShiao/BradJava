@@ -58,6 +58,8 @@ public class Guess extends JFrame implements ActionListener{
     }
     
     private void initGame() {
+    	log.append("開始新一輪遊戲\n");
+    	this.counter = 0;
     	answer = createAnswer(3);
     	System.out.println(answer);
     }
@@ -91,23 +93,38 @@ public class Guess extends JFrame implements ActionListener{
 		// 檢查機制
 		if (g.matches("[0-9]*")) {
 			if (g.length() == answer.length()) {
-				counter++;
-				input.setText("");
-				
-				String result = checkAB(g);
-				log.append(String.format("%d. %s => %s\n", counter, g, result));
-				
-				if (result.equals("3A0B")) {
-					initGame();
-				}else if (counter == times){
-					JOptionPane.showMessageDialog(null, "Answer is " + answer);			
-					initGame();
+				boolean isDup = false;
+				for (int i = 0; i < g.length(); i++) {
+				    for (int j = 0; j < g.length(); j++) {
+				        if (i != j && g.charAt(i) == g.charAt(j)) {
+				            isDup = true;
+							JOptionPane.showMessageDialog(null, " 數字 '" + g.charAt(i) + "' 重複了，猜的數字不能重複！");							
+				            break; // 找到重複就可以跳出內層迴圈
+				        }
+				    }
+				    if (isDup) break; // 若已找到重複則跳出外層迴圈
 				}
+				if (!isDup) {
+				    counter++;
+				    input.setText("");
+				    
+				    String result = checkAB(g);
+				    log.append(String.format("%d. %s => %s\n", counter, g, result));
+				    
+				    if (result.equals("3A0B")) {
+				    	JOptionPane.showMessageDialog(null, "恭喜答對了！猜的次數為：" + counter + " 次");							
+				    	initGame();
+				    }else if (counter == times){
+				    	JOptionPane.showMessageDialog(null, "Answer is " + answer);			
+				    	initGame();
+				    }
+				}
+
 			}else {
 				JOptionPane.showMessageDialog(null, "輸入字數為" + answer.length());							
 			}
 		}else {
-			JOptionPane.showMessageDialog(null, "輸入錯誤!");			
+			JOptionPane.showMessageDialog(null, "輸入錯誤！");			
 		}
 		
 	}
