@@ -13,8 +13,100 @@ import java.util.Stack;
 import javax.swing.JPanel;
 
 //Brad
+public class MyDrawer extends JPanel{
+	private List<LineV2> lines, recycle;
+	private Color defaultColor;
+	private float defaultWidth;
+	
+	
+    public MyDrawer() {
+    	setBackground(Color.YELLOW);
+    	
+    	lines = new ArrayList<>();
+    	recycle = new ArrayList<>();
+    	defaultColor = Color.BLUE;
+    	defaultWidth = 4f;
+    	
+    	MyListener listener = new MyListener();
+    	addMouseListener(listener);
+    	addMouseMotionListener(listener);
+    }
+    
+    @Override
+    protected void paintComponent(Graphics g) {
+    	super.paintComponent(g);
+    	
+    	Graphics2D g2d = (Graphics2D)g;
+
+    	
+    	for (LineV2 line : lines) {
+    		g2d.setColor(line.getColor());
+    		g2d.setStroke(new BasicStroke(line.getWidth()));
+    		for (int i = 1; i < line.getSize(); i++) {
+    			g2d.drawLine(
+    					line.getPointX(i-1), line.getPointY(i-1),
+    					line.getPointX(i), line.getPointY(i));
+    		}
+		}
+    	
+    }
+    
+    private class MyListener extends MouseAdapter {
+    	@Override
+    	public void mousePressed(MouseEvent e) {
+    		LineV2 line = new LineV2(defaultColor, defaultWidth);
+    		line.addPoint(e.getX(), e.getY());
+    		lines.add(line);
+    		
+    		recycle.clear();
+    	}
+    	
+    	@Override
+    	public void mouseDragged(MouseEvent e) {
+    		lines.getLast().addPoint(e.getX(), e.getY());
+    		repaint();
+    	}
+    }
+    
+    public void clear() {
+    	lines.clear();
+    	repaint();
+    }
+    
+    public void undo() {
+    	if (lines.size() > 0) {
+    		recycle.add(lines.removeLast());
+    		repaint();
+    	}
+    }
+    
+    public void redo() {
+    	if (recycle.size() > 0) {
+    		lines.add(recycle.removeLast());
+    		repaint();
+    	}
+   	}
+    
+    public void changeColor(Color newColor) {
+    	defaultColor = newColor;
+    }
+    public Color getColor() {return defaultColor;}
+    
+    public void changeWidth(float width) {
+    	defaultWidth = width;
+    }
+}
+
+
+
+
+
+
+// 0108 LAB
 //public class MyDrawer extends JPanel{
 //	private List<Line> lines;
+//	private Color currentColor = Color.BLACK;
+//	private Stack<Line> undoStack = new Stack<>();
 //	
 //	
 //    public MyDrawer() {
@@ -33,10 +125,11 @@ import javax.swing.JPanel;
 //    	
 //    	Graphics2D g2d = (Graphics2D)g;
 //    	
-//    	g2d.setStroke(new BasicStroke(3));
+//    	g2d.setStroke(new BasicStroke(5));
 //    	g2d.setColor(Color.BLUE);
 //    	
 //    	for (Line line : lines) {
+//    		g2d.setColor(line.getColor());
 //    		for (int i = 1; i < line.getSize(); i++) {
 //    			g2d.drawLine(
 //    					line.getPointX(i-1), line.getPointY(i-1),
@@ -49,9 +142,10 @@ import javax.swing.JPanel;
 //    private class MyListener extends MouseAdapter {
 //    	@Override
 //    	public void mousePressed(MouseEvent e) {
-//    		Line line = new Line();
+//    		Line line = new Line(currentColor);
 //    		line.addPoint(e.getX(), e.getY());
 //    		lines.add(line);
+//    		undoStack.clear();
 //    	}
 //    	
 //    	@Override
@@ -66,95 +160,24 @@ import javax.swing.JPanel;
 //    	repaint();
 //    }
 //    
+//    public void setCurrentColor(Color c) {
+//    	this.currentColor = c;
+//    }
+//    
+//    public Color getCurrentColor() {
+//    	return currentColor;
+//    }
+//    
+//    public void undo() {
+//    	if (!lines.isEmpty()) {
+//    		undoStack.push(lines.remove(lines.size()-1));
+//    		repaint();
+//    	}
+//    }
+//    public void redo() {
+//    	if (!undoStack.isEmpty()) {
+//    		lines.add(undoStack.pop());
+//    		repaint();
+//    	}
+//    }
 //}
-
-
-
-
-
-
-// 0108 LAB
-public class MyDrawer extends JPanel{
-	private List<Line> lines;
-	private Color currentColor = Color.BLACK;
-	private Stack<Line> undoStack = new Stack<>();
-	
-	
-    public MyDrawer() {
-    	setBackground(Color.YELLOW);
-    	
-    	lines = new ArrayList<>();
-    	
-    	MyListener listener = new MyListener();
-    	addMouseListener(listener);
-    	addMouseMotionListener(listener);
-    }
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-    	super.paintComponent(g);
-    	
-    	Graphics2D g2d = (Graphics2D)g;
-    	
-    	g2d.setStroke(new BasicStroke(5));
-    	g2d.setColor(Color.BLUE);
-    	
-    	for (Line line : lines) {
-    		g2d.setColor(line.getColor());
-    		for (int i = 1; i < line.getSize(); i++) {
-    			g2d.drawLine(
-    					line.getPointX(i-1), line.getPointY(i-1),
-    					line.getPointX(i), line.getPointY(i));
-    		}
-		}
-    	
-    }
-    
-    private class MyListener extends MouseAdapter {
-    	@Override
-    	public void mousePressed(MouseEvent e) {
-    		Line line = new Line(currentColor);
-    		line.addPoint(e.getX(), e.getY());
-    		lines.add(line);
-    		undoStack.clear();
-    	}
-    	
-    	@Override
-    	public void mouseDragged(MouseEvent e) {
-    		lines.getLast().addPoint(e.getX(), e.getY());
-    		repaint();
-    	}
-    }
-    
-    public void clear() {
-    	lines.clear();
-    	repaint();
-    }
-    
-    public void setCurrentColor(Color c) {
-    	this.currentColor = c;
-    }
-    
-    public Color getCurrentColor() {
-    	return currentColor;
-    }
-    
-    public void undo() {
-    	if (!lines.isEmpty()) {
-    		undoStack.push(lines.remove(lines.size()-1));
-    		repaint();
-    	}
-    }
-    public void redo() {
-    	if (!undoStack.isEmpty()) {
-    		lines.add(undoStack.pop());
-    		repaint();
-    	}
-    }
-}
-
-
-
-
-
-

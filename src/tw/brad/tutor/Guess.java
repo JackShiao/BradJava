@@ -31,6 +31,7 @@ public class Guess extends JFrame implements ActionListener{
     	
     	input.setFont(new Font(null, Font.BOLD | Font.ITALIC , 24));
     	input.setForeground(Color.BLUE);
+    	log.setFont(new Font(null, Font.PLAIN, 20));
     	
     	setLayout(new BorderLayout());
     	add(log, BorderLayout.CENTER);
@@ -58,10 +59,11 @@ public class Guess extends JFrame implements ActionListener{
     }
     
     private void initGame() {
-    	log.append("開始新一輪遊戲\n");
     	this.counter = 0;
-    	answer = createAnswer(3);
-    	System.out.println(answer);
+    	int r = (int)(Math.random()*3+2);
+    	answer = createAnswer(r);
+    	log.append(String.format("開始新一輪遊戲，請輸入 %d 位數字\n", answer.length()));
+//    	System.out.println(answer);
     }
     
     private String createAnswer(int d) {
@@ -90,6 +92,11 @@ public class Guess extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String g = input.getText();
+		 if ("answer".equalsIgnoreCase(g.trim())) {
+		        JOptionPane.showMessageDialog(null, "答案是：" + answer);
+		        initGame();
+		        return;
+		    }
 		// 檢查機制
 		if (g.matches("[0-9]*")) {
 			if (g.length() == answer.length()) {
@@ -111,7 +118,7 @@ public class Guess extends JFrame implements ActionListener{
 				    String result = checkAB(g);
 				    log.append(String.format("%d. %s => %s\n", counter, g, result));
 				    
-				    if (result.equals("3A0B")) {
+				    if (result.equals(answer.length()+"A0B")) {
 				    	JOptionPane.showMessageDialog(null, "恭喜答對了！猜的次數為：" + counter + " 次");							
 				    	initGame();
 				    }else if (counter == times){
@@ -123,7 +130,7 @@ public class Guess extends JFrame implements ActionListener{
 			}else {
 				JOptionPane.showMessageDialog(null, "輸入字數為" + answer.length());							
 			}
-		}else {
+		}else{
 			JOptionPane.showMessageDialog(null, "輸入錯誤！");			
 		}
 		
