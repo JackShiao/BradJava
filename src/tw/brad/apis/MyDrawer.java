@@ -6,10 +6,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 //Brad
@@ -95,6 +103,39 @@ public class MyDrawer extends JPanel{
     public void changeWidth(float width) {
     	defaultWidth = width;
     }
+    
+    public void saveLines(File file) throws Exception{
+    	try(ObjectOutputStream oout = new ObjectOutputStream(
+    			new FileOutputStream(file))) {
+    		oout.writeObject(lines);
+    	}
+    }
+    public void loadLines(File file) throws Exception{
+    	try(ObjectInputStream oin = new ObjectInputStream(
+    			new FileInputStream(file))) {
+    		Object obj = oin.readObject();
+    		if (obj instanceof List) {
+    			lines = (List<LineV2>)obj;
+    			repaint();
+    			recycle.clear();
+    		}else {
+    			throw new Exception("錯誤!");
+    		}
+    	}
+    }
+    
+    public void saveJPEG() {
+    	BufferedImage bimg = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+    	Graphics2D g2d = bimg.createGraphics();
+    	paint(g2d);
+    	g2d.dispose();
+    	try {
+			ImageIO.write(bimg, "JPEG", new File("dir1/brad.jpg"));
+		} catch (IOException e) {
+			System.out.println(e);
+		}
+    }
+    
 }
 
 

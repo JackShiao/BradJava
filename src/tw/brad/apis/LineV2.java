@@ -1,12 +1,13 @@
 package tw.brad.apis;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
   
-public class LineV2 {
+public class LineV2 implements Serializable{
 	private List<Map<String, Integer>> points;
 	private Color color;
 	private float width;

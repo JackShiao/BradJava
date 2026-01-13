@@ -1,6 +1,8 @@
 package tw.brad.apis;
 
-public class Bike extends Object{
+import java.io.Serializable;
+
+public class Bike extends Object implements Serializable{
 	protected double speed;
 	public Bike() {System.out.println("Bike()");}
 	public Bike(int a) {
