@@ -11,12 +11,12 @@ public class Brad57 {
 
 	public static void main(String[] args) {
 		try {
-			Socket socket = new Socket(InetAddress.getByName(""), 7777);
+			Socket socket = new Socket(InetAddress.getByName("10.0.101.231"), 7777);
 			BufferedOutputStream bout = new BufferedOutputStream(socket.getOutputStream());
 			
 			BufferedInputStream bin = 
 					new BufferedInputStream(
-							new FileInputStream("dir1/google logo.jpg"));
+							new FileInputStream("dir1/Google logo.jpg"));
 			byte[] buf = new byte[4*1024*1024];
 			int len;
 			while ( (len = bin.read(buf)) != -1 ) {
@@ -26,6 +26,7 @@ public class Brad57 {
 			bin.close();
 			bout.flush();
 			bout.close();
+			System.out.println("Success");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
