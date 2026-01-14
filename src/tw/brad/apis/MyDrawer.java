@@ -28,11 +28,11 @@ public class MyDrawer extends JPanel{
 	
 	
     public MyDrawer() {
-    	setBackground(Color.YELLOW);
+    	setBackground(Color.LIGHT_GRAY);
     	
     	lines = new ArrayList<>();
     	recycle = new ArrayList<>();
-    	defaultColor = Color.BLUE;
+    	defaultColor = Color.BLACK;
     	defaultWidth = 4f;
     	
     	MyListener listener = new MyListener();
